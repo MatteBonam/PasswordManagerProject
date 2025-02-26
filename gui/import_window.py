@@ -7,7 +7,7 @@ class ImportWindow:
     def __init__(self, parent, password_storage):
         self.window = tk.Toplevel(parent)
         self.window.title("Configura Importazione")
-        self.window.geometry("600x500")
+        self.window.geometry("600x700")
         self.password_storage = password_storage
         self.setup_ui()
 

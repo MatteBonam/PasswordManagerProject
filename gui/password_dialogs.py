@@ -68,10 +68,10 @@ class AddPasswordDialog:
         
         # Check for duplicates
         for existing in passwords:
-            if existing.service == service:
+            if existing.service == service and existing.username == username:
                 result = tk.messagebox.askyesno(
                     "Conferma", 
-                    f"Esiste già una password per il servizio '{service}'. Vuoi sovrascriverla?"
+                    f"Esiste già una password per il servizio '{service}' e utente '{username}'. Vuoi sovrascriverla?"
                 )
                 if not result:
                     return
@@ -144,8 +144,8 @@ class EditPasswordDialog:
         username = self.username_entry.get().strip()
         password_value = self.password_entry.get()
         
-        if not service:
-            messagebox.showerror("Errore", "Il campo Servizio è obbligatorio")
+        if not service or not username or not password_value:
+            messagebox.showerror("Errore", "Riempire tutti i campi")
             return
         
         # Retrieve existing passwords
@@ -154,17 +154,17 @@ class EditPasswordDialog:
         
         # Remove old password
         for i, existing in enumerate(passwords):
-            if existing.service == self.password.service:
+            if existing.service == self.password.service and existing.username == self.password.username:
                 passwords.pop(i)
                 break
         
         # If service name changed, check for duplicates
-        if service != self.password.service:
+        if service != self.password.service or username != self.password.username:
             for existing in passwords:
-                if existing.service == service:
+                if existing.service == service and existing.username == username:
                     result = messagebox.askyesno(
                         "Conferma", 
-                        f"Esiste già una password per il servizio '{service}'. Vuoi sovrascriverla?"
+                        f"Esiste già una password per il servizio '{service}' e utente '{username}'. Vuoi sovrascriverla?"
                     )
                     if not result:
                         return

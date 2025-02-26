@@ -31,6 +31,7 @@ class MainWindow:
         self.password_list.heading('Servizio', text='Servizio')
         self.password_list.heading('Username', text='Username')
         self.password_list.pack(pady=5, fill='both', expand=True)
+        self.refresh_password_list()
 
     def setup_buttons(self, parent):
         button_frame = ttk.Frame(parent)
@@ -60,10 +61,11 @@ class MainWindow:
 
         selected_item = self.password_list.item(selected[0])
         selected_service = selected_item['values'][0]
+        selected_username = selected_item['values'][1]
 
         # Find the password object
         passwords = self.password_manager['storage'].load_passwords()
-        selected_password = next((p for p in passwords if p.service == selected_service), None)
+        selected_password = next((p for p in passwords if p.service == selected_service and p.username == selected_username), None)
 
         if not selected_password:
             messagebox.showerror("Errore", "Password non trovata")
@@ -80,10 +82,11 @@ class MainWindow:
 
         selected_item = self.password_list.item(selected[0])
         selected_service = selected_item['values'][0]
+        selected_username = selected_item['values'][1]
 
         # Find the password object
         passwords = self.password_manager['storage'].load_passwords()
-        selected_password = next((p for p in passwords if p.service == selected_service), None)
+        selected_password = next((p for p in passwords if p.service == selected_service and p.username == selected_username), None)
 
         if not selected_password:
             messagebox.showerror("Errore", "Password non trovata")
@@ -100,10 +103,11 @@ class MainWindow:
 
         selected_item = self.password_list.item(selected[0])
         selected_service = selected_item['values'][0]
+        selected_username = selected_item['values'][1]
 
         if messagebox.askyesno("Conferma", "Sei sicuro di voler eliminare questa password?"):
             passwords = self.password_manager['storage'].load_passwords()
-            passwords = [p for p in passwords if p.service != selected_service]
+            passwords = [p for p in passwords if p.service != selected_service or p.username != selected_username]
             self.password_manager['storage'].save_passwords(passwords)
             self.refresh_password_list()
 
