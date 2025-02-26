@@ -2,7 +2,6 @@ from tkinter import Tk
 from gui.main_window import MainWindow
 from services.password_storage import PasswordStorage
 from services.settings_manager import SettingsManager
-from utils.encryption import EncryptionManager
 from utils.auto_lock import AutoLock
 
 def main():
@@ -10,8 +9,8 @@ def main():
     root.title("Password Manager")
     root.geometry("600x400")
     
-    encryption_manager = EncryptionManager()
-    settings_manager = SettingsManager(encryption_manager)
+    settings_manager = SettingsManager()
+    encryption_manager = settings_manager.encryption_manager
     password_storage = PasswordStorage(encryption_manager)
     
     app = MainWindow(root, {
