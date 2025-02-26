@@ -5,7 +5,8 @@ from datetime import datetime
 from utils.backup_manager import BackupManager
 
 class BackupWindow:
-    def __init__(self, parent, password_manager):
+    def __init__(self, parent, password_manager, callback = None):
+        self.callback = callback
         self.window = tk.Toplevel(parent)
         self.window.title("Gestione Backup")
         self.window.geometry("500x400")
@@ -89,6 +90,8 @@ class BackupWindow:
                     backup_path = os.path.join("backups", backup_file)
                     BackupManager.restore_backup(self.password_manager, [backup_path])
                     messagebox.showinfo("Ripristino", "Backup ripristinato con successo")
+                    if self.callback:
+                        self.callback()
                     self.window.destroy()
                 except Exception as e:
                     messagebox.showerror("Errore", f"Errore durante il ripristino: {str(e)}")

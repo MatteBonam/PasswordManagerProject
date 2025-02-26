@@ -4,11 +4,14 @@ from tkinter import ttk, messagebox, filedialog
 from utils.import_parser import ImportParser
 
 class ImportWindow:
-    def __init__(self, parent, password_storage):
+    def __init__(self, parent, password_manager, callback = None):
+        self.callback = callback
         self.window = tk.Toplevel(parent)
         self.window.title("Configura Importazione")
-        self.window.geometry("600x700")
-        self.password_storage = password_storage
+        self.window.geometry("600x750")
+        self.password_storage = password_manager['storage']
+        self.settings_manager = password_manager['settings']
+        self.settings = self.settings_manager.load_settings()
         self.setup_ui()
 
     def setup_ui(self):
@@ -53,7 +56,7 @@ Se non specifichi una variabile, verrà usato "IMPORTATO" come valore di default
         format_frame = ttk.LabelFrame(parent, text="Formato di importazione")
         format_frame.pack(fill='x', pady=10)
         
-        self.format_var = tk.StringVar(value='password $service "$username" "$password"')
+        self.format_var = tk.StringVar(value=self.settings['format'])
         self.format_entry = ttk.Entry(format_frame, textvariable=self.format_var, width=60)
         self.format_entry.pack(padx=5, pady=5, fill='x')
 
@@ -133,6 +136,7 @@ Se non specifichi una variabile, verrà usato "IMPORTATO" come valore di default
         
         try:
             format_string = self.format_var.get()
+            self.settings['format'] = format_string
             with open(file_path, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
             
@@ -143,9 +147,9 @@ Se non specifichi una variabile, verrà usato "IMPORTATO" come valore di default
             for line in lines:
                 try:
                     parsed = ImportParser.parse_line(line.strip(), format_string)
-                    service_exists = any(p.service == parsed['service'] for p in passwords)
+                    exists = any(p.service == parsed['service'] and p.username == parsed['username'] for p in passwords)
                     
-                    if not service_exists:
+                    if not exists:
                         passwords.append(Password(**parsed))
                         imported_count += 1
                     else:
@@ -160,6 +164,9 @@ Se non specifichi una variabile, verrà usato "IMPORTATO" come valore di default
                 f"Password importate: {imported_count}\n"
                 f"Password saltate (già esistenti): {skipped_count}"
             )
+            self.settings_manager.save_settings(self.settings)
+            if self.callback:
+                self.callback()
             self.window.destroy()
             
         except Exception as e:

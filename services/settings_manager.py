@@ -16,17 +16,24 @@ class SettingsManager:
                 stored_key = settings.get('key')
                 if stored_key:
                     self.encryption_manager = EncryptionManager(stored_key.encode())
+                return settings
         except FileNotFoundError:
             self.encryption_manager = EncryptionManager()
             self.save_settings()
+            return self.load_settings()
 
-    def save_settings(self):
-        settings = {
-            'master_password_hash': self.master_password_hash,
-            'key': self.encryption_manager.key.decode()
-        }
+    def save_settings(self, settings = None):
+        base_settings = {
+                'master_password_hash': self.master_password_hash,
+                'key': self.encryption_manager.key.decode(),
+                'format' : 'password $service "$username" "$password"'
+            }
+        if settings:
+            for setting in settings.keys():
+                base_settings[setting] = settings[setting]
+            
         with open('settings.json', 'w') as f:
-            json.dump(settings, f)
+            json.dump(base_settings, f)
     
 
 import base64

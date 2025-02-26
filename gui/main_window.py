@@ -123,6 +123,8 @@ class MainWindow:
 
     def show_import_window(self):
         from gui.import_window import ImportWindow
-        ImportWindow(self.master, self.password_manager['storage'])
-    def show_backup_manager():
-        pass
+        ImportWindow(self.master, self.password_manager, self.refresh_password_list)
+
+    def show_backup_manager(self):
+        from gui.backup_window import BackupWindow
+        BackupWindow(self.master, self.password_manager, self.refresh_password_list)
