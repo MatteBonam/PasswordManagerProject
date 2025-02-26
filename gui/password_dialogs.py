@@ -14,7 +14,7 @@ class AddPasswordDialog:
     def create_dialog(self):
         self.dialog = tk.Toplevel(self.parent)
         self.dialog.title("Aggiungi Password")
-        self.dialog.geometry("400x400")
+        self.dialog.geometry("300x250")
         self.dialog.transient(self.parent)
         self.dialog.grab_set()
         
@@ -28,7 +28,7 @@ class AddPasswordDialog:
         self.username_entry.pack(pady=5)
         
         tk.Label(self.dialog, text="Password:").pack()
-        self.password_entry = tk.Entry(self.dialog, show="*", width=30)
+        self.password_entry = tk.Entry(self.dialog, width=30)
         self.password_entry.pack(pady=5)
         
         # Generate password button
@@ -99,7 +99,7 @@ class EditPasswordDialog:
     def create_dialog(self):
         self.dialog = tk.Toplevel(self.parent)
         self.dialog.title("Modifica Password")
-        self.dialog.geometry("300x200")
+        self.dialog.geometry("300x250")
         self.dialog.transient(self.parent)
         self.dialog.grab_set()
         
@@ -115,7 +115,7 @@ class EditPasswordDialog:
         self.username_entry.pack(pady=5)
         
         tk.Label(self.dialog, text="Password:").pack()
-        self.password_entry = tk.Entry(self.dialog, show="*", width=30)
+        self.password_entry = tk.Entry(self.dialog, width=30)
         self.password_entry.insert(0, self.password.password)
         self.password_entry.pack(pady=5)
         
@@ -194,7 +194,7 @@ class ViewPasswordDialog:
     def create_dialog(self):
         self.dialog = tk.Toplevel(self.parent)
         self.dialog.title("Visualizza Password")
-        self.dialog.geometry("350x200")
+        self.dialog.geometry("350x250")
         self.dialog.transient(self.parent)
         self.dialog.grab_set()
         
