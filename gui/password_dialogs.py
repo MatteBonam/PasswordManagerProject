@@ -212,6 +212,9 @@ class ViewPasswordDialog:
         
         # Password info with show/hide toggle
         ttk.Label(info_frame, text="Password:", font=('Arial', 10, 'bold')).grid(row=2, column=0, sticky='w', pady=5)
+
+        ttk.Label(info_frame, text="Hackerata:", font=('Arial', 10, 'bold')).grid(row=3, column=0, sticky='w', pady=5)
+        ttk.Label(info_frame, text=self.password.times).grid(row=3, column=1, sticky='w', pady=5)
         
         password_frame = ttk.Frame(info_frame)
         password_frame.grid(row=2, column=1, sticky='w', pady=5)
@@ -231,7 +234,7 @@ class ViewPasswordDialog:
                 self.password_var.set("•" * len(self.password.password))
                 show_btn.config(text="Mostra")
         
-        show_btn = ttk.Button(password_frame, text="Mostra", width=8, command=toggle_password)
+        show_btn = ttk.Button(password_frame, text="Mostra", width=10, command=toggle_password)
         show_btn.pack(side='left', padx=5)
         
         def copy_to_clipboard():

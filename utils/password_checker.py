@@ -45,3 +45,10 @@ class Password_checker:
                 return True, int(parts[1])
         
         return False, 0
+    
+def main():
+    check = input("inserire password da controllare: ")
+    print(Password_checker.check_password(check))
+
+if __name__ == "__main__":
+    main()
