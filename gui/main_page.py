@@ -4,8 +4,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QH
                            QGridLayout, QTabWidget, QProgressBar, QSpacerItem)
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap, QColor, QPalette, QFont, QLinearGradient, QGradient
-from gui.main_page_components.user_page import Profile_Widget
-from gui.main_page_components.menu_page import Menu_Widget
+from gui.main_page_components.sidebar_page import Sidebar_Widget
 
 
 class Main_Page(QWidget):
@@ -20,36 +19,7 @@ class Main_Page(QWidget):
         main_layout.setContentsMargins(0, 0, 0, 0)
         
         # Menu laterale sinistro
-        sidebar = QWidget()
-        sidebar.setFixedWidth(200)
-        sidebar.setStyleSheet("background-color: #1e1e1e;")
-        
-        sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(10, 20, 10, 20)
-        sidebar_layout.setSpacing(10)
-        
-        profile_widget = Profile_Widget()
-        
-        # Aggiungi elementi menu
-        sidebar_layout.addWidget(profile_widget)
-        sidebar_layout.addSpacing(20)
-        
-        menu_widget = Menu_Widget()
-
-        sidebar_layout.addWidget(menu_widget)
-        
-        sidebar_layout.addStretch()
-        
-        # Menu di importazione/esportazione
-        import_export_items = [
-            "🔼 Import Passwords",
-            "🔽 Export Passwords"
-        ]
-        
-        for text in import_export_items:
-            menu_button = QPushButton(text)
-            menu_button.setStyleSheet("text-align: left; padding: 10px; border-radius: 6px; background-color: transparent;")
-            sidebar_layout.addWidget(menu_button)
+        sidebar = Sidebar_Widget()
         
         # Area contenuto principale
         main_content = QWidget()
@@ -68,14 +38,11 @@ class Main_Page(QWidget):
         search_bar.setPlaceholderText("🔍 Search Password...")
         search_bar.setFixedWidth(200)
         
-        password_details = QLabel("Password Details")
-        password_details.setStyleSheet("font-size: 16px; font-weight: bold;")
         
         header_layout.addWidget(overview_title)
         header_layout.addStretch()
         header_layout.addWidget(search_bar)
         header_layout.addStretch()
-        header_layout.addWidget(password_details)
         
         # Griglia di contenuto
         content_grid = QGridLayout()
@@ -114,22 +81,9 @@ class Main_Page(QWidget):
             password_grid.addWidget(label, 0, i)
         
         # Aggiungi alcune righe di esempio
-        #add_password_row(password_grid, 1, "Gmail", "user@gmail.com", "Email", 85)
-        #add_password_row(password_grid, 2, "Twitter", "username", "Social", 65)
+        self.add_password_row(password_grid, 1, "Gmail", "user@gmail.com", "Email", 85)
+        self.add_password_row(password_grid, 2, "Twitter", "username", "Social", 65)
         
-        # Sezione dettagli password (terza colonna)
-        details_widget = QWidget()
-        details_widget.setFixedWidth(280)
-        details_layout = QVBoxLayout(details_widget)
-        
-        # Sezione grafico forza password
-        #create_strength_meter(details_layout)
-        
-        # Sezione notifiche
-        #create_notifications_section(details_layout)
-        
-        # Sezione impostazioni
-        #create_settings_section(details_layout)
         
         # Assemblaggio layout
         password_section_layout.addWidget(password_header)
@@ -142,175 +96,9 @@ class Main_Page(QWidget):
         # Aggiungi i widget al layout principale
         main_layout.addWidget(sidebar)
         main_layout.addWidget(main_content, 1)
-        main_layout.addWidget(details_widget)
 
-    def create_card(parent_layout, row, col, title, subtitle, icon="", progress=None, toggle=False):
-        card = QFrame()
-        card.setObjectName("card")
-        card.setMinimumHeight(120)
-        
-        card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(15, 15, 15, 15)
-        
-        # Header
-        header = QWidget()
-        header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(0, 0, 0, 5)
-        
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px;")
-        
-        icon_label = QLabel(icon)
-        icon_label.setStyleSheet("font-size: 20px;")
-        
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        header_layout.addWidget(icon_label)
-        
-        # Sottotitolo
-        subtitle_label = QLabel(subtitle)
-        subtitle_label.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-        
-        # Aggiungi elementi al layout della card
-        card_layout.addWidget(header)
-        card_layout.addWidget(subtitle_label)
-        card_layout.addStretch()
-        
-        # Aggiungi barra di progresso o toggle se necessario
-        if progress is not None:
-            progress_widget = QWidget()
-            progress_layout = QHBoxLayout(progress_widget)
-            progress_layout.setContentsMargins(0, 5, 0, 0)
-            
-            progress_bar = QProgressBar()
-            progress_bar.setValue(progress)
-            progress_bar.setTextVisible(False)
-            
-            progress_text = QLabel(f"Progress: {progress}%")
-            progress_text.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-            
-            progress_layout.addWidget(progress_bar)
-            progress_layout.addWidget(progress_text)
-            
-            card_layout.addWidget(progress_widget)
-        
-        if toggle:
-            toggle_widget = QWidget()
-            toggle_layout = QHBoxLayout(toggle_widget)
-            toggle_layout.setContentsMargins(0, 5, 0, 0)
-            
-            toggle_btn = QPushButton("On")
-            toggle_btn.setFixedSize(40, 20)
-            toggle_btn.setStyleSheet("background-color: #4f9fee; border-radius: 10px; font-size: 10px;")
-            
-            toggle_layout.addStretch()
-            toggle_layout.addWidget(toggle_btn)
-            
-            card_layout.addWidget(toggle_widget)
-        
-        parent_layout.addWidget(card, row, col)
 
-    def create_security_trends_card(parent_layout, row, col):
-        card = QFrame()
-        card.setObjectName("card")
-        card.setMinimumHeight(120)
-        
-        card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(15, 15, 15, 15)
-        
-        # Header
-        header = QWidget()
-        header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(0, 0, 0, 5)
-        
-        title_label = QLabel("Security Trends")
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px;")
-        
-        new_label = QPushButton("New")
-        new_label.setObjectName("newButton")
-        new_label.setFixedSize(50, 24)
-        
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        header_layout.addWidget(new_label)
-        
-        # Info sulla sicurezza
-        security_text = QLabel("Last Check: Oct. 13, 23:16\nPassword issues found: 2")
-        security_text.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-        
-        # Footer
-        footer = QWidget()
-        footer_layout = QHBoxLayout(footer)
-        footer_layout.setContentsMargins(0, 10, 0, 0)
-        
-        usage_label = QLabel("Storage usage:")
-        usage_label.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-        
-        progress_bar = QProgressBar()
-        progress_bar.setValue(65)
-        progress_bar.setTextVisible(False)
-        progress_bar.setFixedWidth(100)
-        
-        footer_layout.addWidget(usage_label)
-        footer_layout.addWidget(progress_bar)
-        footer_layout.addStretch()
-        
-        # Aggiungi elementi al layout della card
-        card_layout.addWidget(header)
-        card_layout.addWidget(security_text)
-        card_layout.addStretch()
-        card_layout.addWidget(footer)
-        
-        parent_layout.addWidget(card, row, col)
-
-    def create_data_import_card(parent_layout, row, col):
-        card = QFrame()
-        card.setObjectName("card")
-        card.setMinimumHeight(120)
-        
-        card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(15, 15, 15, 15)
-        
-        # Header
-        header = QWidget()
-        header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(0, 0, 0, 5)
-        
-        title_label = QLabel("Data Import")
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px;")
-        
-        new_label = QPushButton("Import")
-        new_label.setObjectName("newButton")
-        new_label.setFixedSize(60, 24)
-        
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        header_layout.addWidget(new_label)
-        
-        # Info sull'importazione dati
-        import_text = QLabel("Imported in Oct. 05, 13:48\nPasswords missing: 0")
-        import_text.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-        
-        # Footer
-        footer = QWidget()
-        footer_layout = QHBoxLayout(footer)
-        footer_layout.setContentsMargins(0, 10, 0, 0)
-        
-        footer_text = QLabel("Last import:")
-        footer_text.setStyleSheet("color: #aaaaaa; font-size: 12px;")
-        
-        footer_layout.addWidget(footer_text)
-        footer_layout.addStretch()
-        
-        # Aggiungi elementi al layout della card
-        card_layout.addWidget(header)
-        card_layout.addWidget(import_text)
-        card_layout.addStretch()
-        card_layout.addWidget(footer)
-        
-        parent_layout.addWidget(card, row, col)
-
-    def add_password_row(grid, row, name, username, category, strength):
+    def add_password_row(self, grid, row, name, username, category, strength):
         # Checkbox
         # grid.addWidget(QCheckBox(), row, 0)
         

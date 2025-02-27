@@ -24,6 +24,7 @@ class SettingsManager:
 
     def save_settings(self, settings = None):
         base_settings = {
+                'username' : 'user',
                 'master_password_hash': self.master_password_hash,
                 'key': self.encryption_manager.key.decode(),
                 'format' : 'password $service "$username" "$password"'
